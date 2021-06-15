@@ -14,14 +14,33 @@ class TestPostRequests(object):
             response = requests.get(url=bear + '/' + response.text)
             assert response.json() == test_answ[index]
 
+    def test_wrong_type(self, bear):
+        test_bear = deepcopy(test_bears[0])
+        test_bear["bear_type"] = "GROLAR"
+        response = requests.post(url=bear, json=test_bear)
+        assert response.status_code == 500
+        test_bear["bear_type"] = "UNKNOWN"
+        response = requests.post(url=bear, json=test_bear)
+        assert response.status_code == 500
+
+    def test_bear_age(self, bear):
+        test_bear = deepcopy(test_bears[0])
+        test_bear["bear_age"] = -12
+        response = requests.post(url=bear, json=test_bear)
+        assert response.status_code == 400
+
+        test_bear["bear_age"] = 101
+        response = requests.post(url=bear, json=test_bear)
+        assert response.status_code == 400
+
     def test_bear_names(self, bear):
         renamed_test_bears = deepcopy(test_bears)
         renamed_test_answ = deepcopy(test_answ)
         renamed_test_bears[0]["bear_name"] = renamed_test_answ[0]["bear_name"] = '!?%$#__'
-        renamed_test_bears[1]["bear_name"] = renamed_test_answ[1]["bear_name"] = 'f\^^^f&%+'
+        renamed_test_bears[1]["bear_name"] = renamed_test_answ[1]["bear_name"] = 'B\^^E^&%A+R'
         renamed_test_bears[1]["bear_type"] = renamed_test_answ[1]["bear_type"] = 'POLAR'
         renamed_test_bears[2]["bear_name"] = renamed_test_answ[2]["bear_name"] = '1234'
-        renamed_test_bears[3]["bear_name"] = renamed_test_answ[3]["bear_name"] = 'medведь'
+        renamed_test_bears[3]["bear_name"] = renamed_test_answ[3]["bear_name"] = 'MEDВЕДЬ'
         for index, test_bear in enumerate(renamed_test_bears, start=0):
             response = requests.post(url=bear, json=test_bear)
             assert response.status_code == 200
@@ -39,22 +58,6 @@ class TestPostRequests(object):
         assert response.text == 'EMPTY'
         response = requests.get(url=bear + '/' + bear_id)
         assert response.json() == test_answ[0]
-
-    def test_wrong_type(self, bear):
-        test_bear = deepcopy(test_bears[0])
-        test_bear["bear_type"] = "GROLAR"
-        response = requests.post(url=bear, json=test_bear)
-        assert response.status_code == 500
-
-    def test_bear_age(self, bear):
-        test_bear = deepcopy(test_bears[0])
-        test_bear["bear_age"] = -12
-        response = requests.post(url=bear, json=test_bear)
-        assert response.status_code == 400
-
-        test_bear["bear_age"] = 101
-        response = requests.post(url=bear, json=test_bear)
-        assert response.status_code == 400
 
     def test_empty_attr(self, bear):
         empty_test_bears = deepcopy(test_bears)
