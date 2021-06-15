@@ -6,6 +6,6 @@ Access to download in the repository: https://hub.docker.com/r/azshoo/alaska wit
 ### Test cases
 [Test cases description (in russian)](test_cases.md)
 ### Pytest
-[Python pytest cases](tests)
+[Python pytest cases](https://github.com/Artem-Bu/alaska-test/tree/main/test)
 ### Known issues
 [known issues (in russian)](known_issues.md)
